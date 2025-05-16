@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: rbhairoasis
+    env: docker
+    plan: free
+    branch: main
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    buildCommand: "" 
+    envVars:
+      - key: APP_NAME
+        value: RBHairOasis
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:KMEMzZVhkVlBnuaPdEQoG0EknVHiphYFmJNGT79yEZ0=
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://rbhairoasis.onrender.com
+      - key: LOG_CHANNEL
+        value: stack
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: dpg-d0h6r93e5dus73bcvq9g-a
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: rbhairoasis
+      - key: DB_USERNAME
+        value: rbhairoasis_db_user
+      - key: DB_PASSWORD
+        value: pHDe8CEimKuKCqnktAFhDv5I7PH9E6hq
+      - key: FILESYSTEM_DRIVER
+        value: public
