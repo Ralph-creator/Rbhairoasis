@@ -20,8 +20,23 @@
         <a href="/" class="bg-white text-pink-500 px-4 py-2 rounded hover:bg-pink-100">Back to Home</a>
     </header>
 
+    <!-- Button Navigation Group -->
+    <div class="max-w-7xl mx-auto mt-6 px-4">
+        <div class="mb-6 flex justify-end gap-4">
+            <a href="{{ route('admin.create') }}" class="bg-violet-700 hover:bg-violet-800 text-white px-4 py-2 rounded shadow text-sm font-semibold">
+                Add Product
+            </a>
+            <a href="{{ route('admin.manage') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow text-sm font-semibold">
+                Manage Products
+            </a>
+            <a href="{{ url('/') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded shadow text-sm font-semibold">
+                Back to Store
+            </a>
+        </div>
+    </div>
+
     <!-- Product Upload Form -->
-    <section class="max-w-3xl mx-auto mt-10 bg-white p-6 rounded-lg shadow">
+    <section class="max-w-3xl mx-auto mt-6 bg-white p-6 rounded-lg shadow">
         <h2 class="text-xl font-semibold mb-4 text-pink-600">Upload New Product</h2>
         <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
@@ -67,7 +82,9 @@
                         @csrf
                         @method('PATCH')
                         <input type="hidden" name="toggle_sold_out" value="true">
-                        <button type="submit" class="bg-yellow-400 text-white px-3 py-1 rounded text-sm">{{ $product->is_sold_out ? 'Mark Available' : 'Mark Sold Out' }}</button>
+                        <button type="submit" class="bg-yellow-400 text-white px-3 py-1 rounded text-sm">
+                            {{ $product->is_sold_out ? 'Mark Available' : 'Mark Sold Out' }}
+                        </button>
                     </form>
                     <a href="{{ route('admin.products.edit', $product->id) }}" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Edit</a>
                     <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST">
