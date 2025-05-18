@@ -29,8 +29,8 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Set permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose port 8000
-EXPOSE 8000
+# Expose port 9000
+EXPOSE 9000
 
 # Start the PHP FastCGI Process Manager
 CMD ["php-fpm"]
