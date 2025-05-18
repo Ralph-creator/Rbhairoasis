@@ -28,17 +28,25 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # 3) Set working dir
 WORKDIR /var/www/html
 
-# 4) Copy only composer files, create cache/storage, install deps
+# 4) Copy composer files & create needed dirs
 COPY composer.json composer.lock ./
 RUN mkdir -p bootstrap/cache storage \
  && chmod -R 775 bootstrap/cache storage
 
-RUN composer install --no-dev --optimize-autoloader --prefer-dist || { echo 'Composer install failed'; exit 1; }
+# 5) Install PHP deps WITHOUT running scripts (skip package:discover here)
+RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
 
-# 5) Copy the rest of the app
+# 6) Copy the rest of your application (including .env)
 COPY . .
 
-# 6) Final permissions
+# 7) Now we have .env and app code—run any post-autoload scripts
+RUN composer run-script post-autoload-dump \
+ && php artisan key:generate --ansi \
+ && php artisan config:cache --ansi \
+ && php artisan route:cache --ansi \
+ && php artisan view:cache --ansi
+
+# 8) Set ownership & permissions
 RUN chown -R www-data:www-data /var/www/html \
  && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
