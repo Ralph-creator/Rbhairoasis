@@ -12,8 +12,7 @@ RUN apt-get update && apt-get install -y \
 # -------------------------------------------------
 # 2) Set working directory
 # -------------------------------------------------
-WORKDIR /var/www
-
+WORKDIR /var/www/html
 # -------------------------------------------------
 # 3) Composer (copy from official image)
 # -------------------------------------------------
@@ -22,7 +21,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # -------------------------------------------------
 # 4) Copy project code
 # -------------------------------------------------
-COPY . /var/www
+COPY . /var/www/html/
 
 # -------------------------------------------------
 # 5) Correct ownership & permissions
