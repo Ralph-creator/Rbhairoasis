@@ -31,10 +31,9 @@ WORKDIR /var/www/html
 
 # 4) Copy only composer files, create cache/storage, install deps
 COPY composer.json composer.lock ./
-# ensure directories exist for post-install scripts
 RUN mkdir -p bootstrap/cache storage \
  && chmod -R 775 bootstrap/cache storage \
- && composer install --no-dev --optimize-autoloader --prefer-dist
+ && composer install --no-dev --optimize-autoloader --prefer-dist || { echo 'Composer install failed'; exit 1; }
 
 # 5) Copy the rest of the app
 COPY . .
