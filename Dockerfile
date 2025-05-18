@@ -1,31 +1,47 @@
 # Dockerfile for Laravel on Render
 
+# 1) Base PHP image
 FROM php:8.0-fpm
 
+# 2) Set working directory
 WORKDIR /var/www
 
-# 1) System deps
-RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip git \
+# 3) Install system dependencies & PHP extensions
+RUN apt-get update \
+ && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    unzip \
+    git \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
- && docker-php-ext-install gd zip
+ && docker-php-ext-install \
+    gd \
+    zip \
+    pdo \
+    pdo_mysql \
+ && rm -rf /var/lib/apt/lists/*
 
-# 2) Composer
+# 4) Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-        RUN mkdir -p storage bootstrap/cache \
-        && chown -R www-data:www-data storage bootstrap/cache
-
-
-# 3) Copy app & install PHP deps
+# 5) Copy application files
 COPY . .
+
+# 6) Ensure storage & cache directories exist
+RUN mkdir -p storage bootstrap/cache \
+ && chown -R www-data:www-data storage bootstrap/cache
+
+# 7) Install PHP dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# 4) Permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
+# 8) Final perms
+RUN chown -R www-data:www-data /var/www \
+ && chmod -R 775 storage bootstrap/cache
 
-# 5) Expose the port Render sets (just documentation—Render injects $PORT)
-EXPOSE 8000
+# 9) Expose PHP-FPM port
+EXPOSE 9000
 
-# 6) Start the built-in server on $PORT (fallback to 8000)
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
+# 10) Run PHP-FPM
+CMD ["php-fpm"]
