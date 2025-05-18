@@ -13,6 +13,10 @@ RUN apt-get update && apt-get install -y \
 # 2) Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+        RUN mkdir -p storage bootstrap/cache \
+        && chown -R www-data:www-data storage bootstrap/cache
+
+
 # 3) Copy app & install PHP deps
 COPY . .
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
