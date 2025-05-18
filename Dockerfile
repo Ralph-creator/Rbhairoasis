@@ -1,6 +1,6 @@
 FROM php:8.2-fpm
 
-# install system dependencies and PHP extensions
+# 1) Install system libs & PHP extensions
 RUN apt-get update \
  && apt-get install -y \
     git \
@@ -14,7 +14,6 @@ RUN apt-get update \
     libxml2-dev \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install \
-    pdo \
     pdo_mysql \
     mbstring \
     zip \
@@ -24,16 +23,20 @@ RUN apt-get update \
     gd \
  && rm -rf /var/lib/apt/lists/*
 
-# set working dir
-WORKDIR /var/www/html
-
-# install composer
+# 2) Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# copy app
-COPY . /var/www/html
+# 3) Set working dir
+WORKDIR /var/www/html
 
-# permissions
+# 4) Copy composer files & install deps
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --optimize-autoloader --prefer-dist
+
+# 5) Copy the rest of the app
+COPY . .
+
+# 6) Permissions
 RUN chown -R www-data:www-data /var/www/html \
  && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
