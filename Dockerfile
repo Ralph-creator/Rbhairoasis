@@ -1,36 +1,27 @@
-# Dockerfile for Laravel Render Application
+# Dockerfile for Laravel on Render
 
-# Set the base image
 FROM php:8.0-fpm
 
-# Set working directory
 WORKDIR /var/www
 
-# Install system dependencies
+# 1) System deps
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    unzip \
-    git \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip
+    libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip git \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install gd zip
 
-# Install Composer
+# 2) Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy application files
+# 3) Copy app & install PHP deps
 COPY . .
-
-# Install PHP dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# 4) Permissions
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Expose port 9000
-EXPOSE 9000
+# 5) Expose the port Render sets (just documentation—Render injects $PORT)
+EXPOSE 8000
 
-# Start the PHP FastCGI Process Manager
-CMD ["php-fpm"]
+# 6) Start the built-in server on $PORT (fallback to 8000)
+CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
