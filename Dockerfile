@@ -29,14 +29,17 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # 3) Set working dir
 WORKDIR /var/www/html
 
-# 4) Copy composer files & install deps
+# 4) Copy only composer files, create cache/storage, install deps
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --prefer-dist
+# ensure directories exist for post-install scripts
+RUN mkdir -p bootstrap/cache storage \
+ && chmod -R 775 bootstrap/cache storage \
+ && composer install --no-dev --optimize-autoloader --prefer-dist
 
 # 5) Copy the rest of the app
 COPY . .
 
-# 6) Permissions
+# 6) Final permissions
 RUN chown -R www-data:www-data /var/www/html \
  && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
