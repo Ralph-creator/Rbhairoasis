@@ -32,6 +32,8 @@
             <a href="{{ url('/') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded shadow text-sm font-semibold">
                 Back to Store
             </a>
+            <a href="{{ route('admin.inbox') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Inbox</a>
+
         </div>
     </div>
 

@@ -15,6 +15,13 @@
                    class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded shadow text-sm font-semibold">
                     Back to Store
                 </a>
+                                <a href="{{ route('admin.inbox') }}"
+                style="background:#2563eb!important; color:#fff!important;"
+                class="inline-block px-4 py-2 rounded shadow text-sm font-semibold">
+                    Inbox
+                </a>
+
+
             </div>
         </div>
     </x-slot>

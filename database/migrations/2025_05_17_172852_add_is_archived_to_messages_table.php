@@ -11,14 +11,12 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
-{
-    Schema::table('products', function (Blueprint $table) {
-        $table->string('image_path')->nullable();
-    });
-}
-
-
+        public function up()
+    {
+        Schema::table('messages', function (Blueprint $table) {
+            $table->boolean('is_archived')->default(false);
+        });
+    }
     /**
      * Reverse the migrations.
      *
@@ -26,7 +24,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
+        Schema::table('messages', function (Blueprint $table) {
             //
         });
     }

@@ -11,23 +11,21 @@ return new class extends Migration
      *
      * @return void
      */
-   public function up()
-{
-    Schema::table('products', function (Blueprint $table) {
-        $table->string('name')->after('id');
-    });
-}
-
-
+            public function up()
+        {
+            Schema::table('users', function (Blueprint $table) {
+                $table->boolean('is_admin')->default(false);
+            });
+        }
     /**
      * Reverse the migrations.
      *
      * @return void
      */
     public function down()
-{
-    Schema::table('products', function (Blueprint $table) {
-        $table->dropColumn('name');
-    });
-}
+    {
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
+    }
 };
