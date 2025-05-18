@@ -1,14 +1,4 @@
 FROM php:8.2-fpm
-# …after COPY . .
-# clear any old caches
-RUN php artisan config:clear \
- && php artisan cache:clear \
- && php artisan route:clear \
- && php artisan view:clear \
-# then rebuild optimized caches
- && php artisan config:cache \
- && php artisan route:cache \
- && php artisan view:cache
 
 # 1) System deps + PHP extensions
 RUN apt-get update && apt-get install -y \
