@@ -1,8 +1,7 @@
 FROM php:8.2-fpm
 
 # 1) Install system libs & PHP extensions
-RUN apt-get update \
- && apt-get install -y \
+RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
@@ -32,8 +31,9 @@ WORKDIR /var/www/html
 # 4) Copy only composer files, create cache/storage, install deps
 COPY composer.json composer.lock ./
 RUN mkdir -p bootstrap/cache storage \
- && chmod -R 775 bootstrap/cache storage \
- && composer install --no-dev --optimize-autoloader --prefer-dist || { echo 'Composer install failed'; exit 1; }
+ && chmod -R 775 bootstrap/cache storage
+
+RUN composer install --no-dev --optimize-autoloader --prefer-dist || { echo 'Composer install failed'; exit 1; }
 
 # 5) Copy the rest of the app
 COPY . .
@@ -44,4 +44,4 @@ RUN chown -R www-data:www-data /var/www/html \
 
 EXPOSE 8000
 
-CMD ["php","artisan","serve","--host=0.0.0.0","--port=8000","--public","public"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000", "--public", "public"]
