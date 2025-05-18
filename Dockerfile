@@ -41,7 +41,7 @@ RUN chown -R www-data:www-data /var/www \
  && chmod -R 775 storage bootstrap/cache
 
 # 9) Expose PHP-FPM port
-EXPOSE 9000
+EXPOSE 8000
 
-# 10) Run PHP-FPM
-CMD ["php-fpm"]
+# 10) Start the built-in server on $PORT (fallback to 8000)
+CMD php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
